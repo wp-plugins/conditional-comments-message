@@ -1,4 +1,4 @@
-=== Conditional Comments Message ===
+
 Tags: comments, message, after, conditional, automatically close
 Requires at least: 3.5
 Tested up to: 3.9
@@ -60,10 +60,15 @@ Add this to your functions.php:
 
 == Changelog ==
 
+= 0.0.2 =
+- updated support tab
+
 = 0.0.1 =
 - created
 
 == Upgrade Notice ==
+
+= 0.0.2 = updated support tab
 
 = 0.0.1 =
 created
