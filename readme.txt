@@ -60,6 +60,9 @@ Add this to your functions.php:
 
 == Changelog ==
 
+= 0.0.3 =
+- code fix
+
 = 0.0.2 =
 - updated support tab
 
@@ -68,7 +71,11 @@ Add this to your functions.php:
 
 == Upgrade Notice ==
 
-= 0.0.2 = updated support tab
+= 0.0.6 =
+- code fix
+
+= 0.0.2 =
+- updated support tab
 
 = 0.0.1 =
 created

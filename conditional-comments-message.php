@@ -3,7 +3,7 @@
 Plugin Name: Conditional Comments Message
 Plugin URI: http://www.jimmyscode.com/wordpress/conditional-comments-message/
 Description: Show a message when comments are set to close automatically
-Version: 0.0.2
+Version: 0.0.3
 Author: Jimmy Pe&ntilde;a
 Author URI: http://www.jimmyscode.com/
 License: GPLv2 or later
@@ -11,7 +11,7 @@ License: GPLv2 or later
 
 	define('CCM_PLUGIN_NAME', 'Conditional Comments Message');
 	// plugin constants
-	define('CCM_VERSION', '0.0.2');
+	define('CCM_VERSION', '0.0.3');
 	define('CCM_SLUG', 'conditional-comments-message');
 	define('CCM_LOCAL', 'ccm');
 	define('CCM_OPTION', 'ccm');
@@ -48,8 +48,10 @@ License: GPLv2 or later
 	// validation function
 	function ccm_validation($input) {
 		// sanitize textarea
-		$input[CCM_DEFAULT_TEXT_NAME] = wp_kses_post(force_balance_tags($input[CCM_DEFAULT_TEXT_NAME]));
-		$input[CCM_DEFAULT_CLOSED_TEXT_NAME] = wp_kses_post(force_balance_tags($input[CCM_DEFAULT_CLOSED_TEXT_NAME]));
+		if (!empty($input)) {
+			$input[CCM_DEFAULT_TEXT_NAME] = wp_kses_post(force_balance_tags($input[CCM_DEFAULT_TEXT_NAME]));
+			$input[CCM_DEFAULT_CLOSED_TEXT_NAME] = wp_kses_post(force_balance_tags($input[CCM_DEFAULT_CLOSED_TEXT_NAME]));
+		}
 		return $input;
 	} 
 
@@ -71,7 +73,7 @@ License: GPLv2 or later
 			<div><?php _e('You are running plugin version', ccm_get_local()); ?> <strong><?php echo CCM_VERSION; ?></strong>.</div>
 
 			<?php /* http://code.tutsplus.com/tutorials/the-complete-guide-to-the-wordpress-settings-api-part-5-tabbed-navigation-for-your-settings-page--wp-24971 */ ?>
-			<?php $active_tab = (isset($_GET['tab']) ? $_GET['tab'] : 'settings'); ?>
+			<?php $active_tab = (!empty($_GET['tab']) ? $_GET['tab'] : 'settings'); ?>
 
 			<h2 class="nav-tab-wrapper">
 			  <a href="?page=<?php echo ccm_get_slug(); ?>&tab=settings" class="nav-tab <?php echo $active_tab == 'settings' ? 'nav-tab-active' : ''; ?>"><?php _e('Settings', ccm_get_local()); ?></a>
@@ -113,7 +115,11 @@ License: GPLv2 or later
 	add_action('comment_form_after','ccm_commentsclosingmsg'); // comment_form_comments_closed
   function ccm_commentsclosingmsg() {
 		$options = ccm_getpluginoptions();
-		$enabled = (bool)$options[CCM_DEFAULT_ENABLED_NAME];
+		if (!empty($options)) {
+			$enabled = (bool)$options[CCM_DEFAULT_ENABLED_NAME];
+		} else {
+			$enabled = CCM_DEFAULT_ENABLED;
+		}
 		if ($enabled) {
 			$output = sanitize_text_field($options[CCM_DEFAULT_TEXT_NAME]); // do we need to sanitize here????
 			$numdays = get_option('close_comments_days_old'); 
@@ -132,8 +138,11 @@ License: GPLv2 or later
 	add_action('comment_form_comments_closed', 'ccm_show_closed');
 	function ccm_show_closed() {
 		$options = ccm_getpluginoptions();
-		$enabled = (bool)$options[CCM_DEFAULT_ENABLED_NAME];
-		
+		if (!empty($options)) {
+			$enabled = (bool)$options[CCM_DEFAULT_ENABLED_NAME];
+		} else {
+			$enabled = CCM_DEFAULT_ENABLED;
+		}
 		if ($enabled) {
 			$output = sanitize_text_field($options[CCM_DEFAULT_CLOSED_TEXT_NAME]);
 			ccm_show_output($output);
@@ -151,12 +160,14 @@ License: GPLv2 or later
 		global $pagenow;
 		if (current_user_can(CCM_PERMISSIONS_LEVEL)) { // user has privilege
 			if ($pagenow == 'options-general.php') { // we are on Settings menu
-				if ($_GET['page'] == ccm_get_slug()) { // we are on this plugin's settings page
-					$options = ccm_getpluginoptions();
-					if ($options != false) {
-						$enabled = (bool)$options[CCM_DEFAULT_ENABLED_NAME];
-						if (!$enabled) {
-							echo '<div id="message" class="error">' . CCM_PLUGIN_NAME . ' ' . __('is currently disabled.', ccm_get_local()) . '</div>';
+				if (!empty($_GET['page'])) {
+					if ($_GET['page'] == ccm_get_slug()) { // we are on this plugin's settings page
+						$options = ccm_getpluginoptions();
+						if (!empty($options)) {
+							$enabled = (bool)$options[CCM_DEFAULT_ENABLED_NAME];
+							if (!$enabled) {
+								echo '<div id="message" class="error">' . CCM_PLUGIN_NAME . ' ' . __('is currently disabled.', ccm_get_local()) . '</div>';
+							}
 						}
 					}
 				}
@@ -169,8 +180,10 @@ License: GPLv2 or later
 		global $pagenow;
 		if (current_user_can(CCM_PERMISSIONS_LEVEL)) { // user has privilege
 			if ($pagenow == 'options-general.php') { // we are on Settings menu
-				if ($_GET['page'] == ccm_get_slug()) { // we are on this plugin's settings page
-					ccm_admin_styles();
+				if (!empty($_GET['page'])) {
+					if ($_GET['page'] == ccm_get_slug()) { // we are on this plugin's settings page
+						ccm_admin_styles();
+					}
 				}
 			}
 		}
