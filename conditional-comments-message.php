@@ -3,7 +3,7 @@
 Plugin Name: Conditional Comments Message
 Plugin URI: http://www.jimmyscode.com/wordpress/conditional-comments-message/
 Description: Show a message when comments are set to close automatically
-Version: 0.0.3
+Version: 0.0.4
 Author: Jimmy Pe&ntilde;a
 Author URI: http://www.jimmyscode.com/
 License: GPLv2 or later
@@ -11,7 +11,7 @@ License: GPLv2 or later
 
 	define('CCM_PLUGIN_NAME', 'Conditional Comments Message');
 	// plugin constants
-	define('CCM_VERSION', '0.0.3');
+	define('CCM_VERSION', '0.0.4');
 	define('CCM_SLUG', 'conditional-comments-message');
 	define('CCM_LOCAL', 'ccm');
 	define('CCM_OPTION', 'ccm');
@@ -47,8 +47,9 @@ License: GPLv2 or later
 	}
 	// validation function
 	function ccm_validation($input) {
-		// sanitize textarea
+		// validate all form fields
 		if (!empty($input)) {
+			$input[CCM_DEFAULT_ENABLED_NAME] = (bool)$input[CCM_DEFAULT_ENABLED_NAME];
 			$input[CCM_DEFAULT_TEXT_NAME] = wp_kses_post(force_balance_tags($input[CCM_DEFAULT_TEXT_NAME]));
 			$input[CCM_DEFAULT_CLOSED_TEXT_NAME] = wp_kses_post(force_balance_tags($input[CCM_DEFAULT_CLOSED_TEXT_NAME]));
 		}
@@ -88,17 +89,19 @@ License: GPLv2 or later
 			<h3 id="settings"><img src="<?php echo plugins_url(ccm_get_path() . '/images/settings.png'); ?>" title="" alt="" height="61" width="64" align="absmiddle" /> <?php _e('Plugin Settings', ccm_get_local()); ?></h3>
 				<table class="form-table" id="theme-options-wrap">
 					<tr valign="top"><th scope="row"><strong><label title="<?php _e('Is plugin enabled? Uncheck this to turn it off temporarily.', ccm_get_local()); ?>" for="<?php echo ccm_get_option(); ?>[<?php echo CCM_DEFAULT_ENABLED_NAME; ?>]"><?php _e('Plugin enabled?', ccm_get_local()); ?></label></strong></th>
-						<td><input type="checkbox" id="<?php echo ccm_get_option(); ?>[<?php echo CCM_DEFAULT_ENABLED_NAME; ?>]" name="<?php echo ccm_get_option(); ?>[<?php echo CCM_DEFAULT_ENABLED_NAME; ?>]" value="1" <?php checked('1', $options[CCM_DEFAULT_ENABLED_NAME]); ?> /></td>
+						<td><input type="checkbox" id="<?php echo ccm_get_option(); ?>[<?php echo CCM_DEFAULT_ENABLED_NAME; ?>]" name="<?php echo ccm_get_option(); ?>[<?php echo CCM_DEFAULT_ENABLED_NAME; ?>]" value="1" <?php checked('1', ccm_checkifset(CCM_DEFAULT_ENABLED_NAME, CCM_DEFAULT_ENABLED, $options)); ?> /></td>
 					</tr>
-					<tr valign="top"><td colspan="2"><?php _e('Is plugin enabled? Uncheck this to turn it off temporarily.', ccm_get_local()); ?></td></tr>
+					<?php ccm_explanationrow(__('Is plugin enabled? Uncheck this to turn it off temporarily.', ccm_get_local())); ?>
+					<?php ccm_getlinebreak(); ?>
 					<tr valign="top"><th scope="row"><strong><label title="<?php _e('Enter open comments message', ccm_get_local()); ?>" for="<?php echo ccm_get_option(); ?>[<?php echo CCM_DEFAULT_TEXT_NAME; ?>]"><?php _e('Enter open comments message', ccm_get_local()); ?></label></strong></th>
-						<td><textarea rows="12" cols="75" id="<?php echo ccm_get_option(); ?>[<?php echo CCM_DEFAULT_TEXT_NAME; ?>]" name="<?php echo ccm_get_option(); ?>[<?php echo CCM_DEFAULT_TEXT_NAME; ?>]"><?php echo $options[CCM_DEFAULT_TEXT_NAME]; ?></textarea></td>
+						<td><textarea rows="12" cols="75" id="<?php echo ccm_get_option(); ?>[<?php echo CCM_DEFAULT_TEXT_NAME; ?>]" name="<?php echo ccm_get_option(); ?>[<?php echo CCM_DEFAULT_TEXT_NAME; ?>]"><?php echo ccm_checkifset(CCM_DEFAULT_TEXT_NAME, CCM_DEFAULT_TEXT, $options); ?></textarea></td>
 					</tr>
-					<tr valign="top"><td colspan="2"><?php _e('Enter the message you want users to see while the comment period is open. Go to <a href="' . admin_url() . 'options-discussion.php">Discussion</a> settings to configure auto-closing comment periods.<br />Template tag <strong>%NUMDAYS%</strong> is for the # of days before comments automatically close.', ccm_get_local()); ?></td></tr>
+					<?php ccm_explanationrow(__('Enter the message you want users to see while the comment period is open. Go to <a href="' . admin_url() . 'options-discussion.php">Discussion</a> settings to configure auto-closing comment periods.<br />Template tag <strong>%NUMDAYS%</strong> is for the # of days before comments automatically close.', ccm_get_local())); ?>
+					<?php ccm_getlinebreak(); ?>
 					<tr valign="top"><th scope="row"><strong><label title="<?php _e('Enter closed comments message', ccm_get_local()); ?>" for="<?php echo ccm_get_option(); ?>[<?php echo CCM_DEFAULT_CLOSED_TEXT_NAME; ?>]"><?php _e('Enter closed comments message', ccm_get_local()); ?></label></strong></th>
-						<td><textarea rows="12" cols="75" id="<?php echo ccm_get_option(); ?>[<?php echo CCM_DEFAULT_CLOSED_TEXT_NAME; ?>]" name="<?php echo ccm_get_option(); ?>[<?php echo CCM_DEFAULT_CLOSED_TEXT_NAME; ?>]"><?php echo $options[CCM_DEFAULT_CLOSED_TEXT_NAME]; ?></textarea></td>
+						<td><textarea rows="12" cols="75" id="<?php echo ccm_get_option(); ?>[<?php echo CCM_DEFAULT_CLOSED_TEXT_NAME; ?>]" name="<?php echo ccm_get_option(); ?>[<?php echo CCM_DEFAULT_CLOSED_TEXT_NAME; ?>]"><?php echo ccm_checkifset(CCM_DEFAULT_CLOSED_TEXT_NAME, CCM_DEFAULT_CLOSED_TEXT, $options); ?></textarea></td>
 					</tr>
-					<tr valign="top"><td colspan="2"><?php _e('Enter the message you want users to see when the comments period is closed.', ccm_get_local()); ?></td></tr>
+					<?php ccm_explanationrow(__('Enter the message you want users to see when the comments period is closed.', ccm_get_local())); ?>
 					</table>
 				<?php submit_button(); ?>
 			<?php } else { ?>
@@ -272,5 +275,14 @@ License: GPLv2 or later
 		$output .= '<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7EX9NB9TLFHVW"><img src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" alt="Donate with PayPal" title="Support this plugin" width="92" height="26" /></a>';
 		$output .= '<br /><br />';
 		return $output;		
+	}
+	function ccm_checkifset($optionname, $optiondefault, $optionsarr) {
+		return (!empty($optionsarr[$optionname]) ? $optionsarr[$optionname] : $optiondefault);
+	}
+	function ccm_getlinebreak() {
+	  echo '<tr valign="top"><td colspan="2"></td></tr>';
+	}
+	function ccm_explanationrow($msg = '') {
+		echo '<tr valign="top"><td></td><td><em>' . $msg . '</em></td></tr>';
 	}
 ?>

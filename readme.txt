@@ -60,6 +60,10 @@ Add this to your functions.php:
 
 == Changelog ==
 
+= 0.0.4 =
+- permanent fix for Undefined Index issue
+- admin CSS and page updates
+
 = 0.0.3 =
 - code fix
 
@@ -71,7 +75,10 @@ Add this to your functions.php:
 
 == Upgrade Notice ==
 
-= 0.0.6 =
+= 0.0.4 =
+- permanent fix for Undefined Index issue; admin CSS and page updates
+
+= 0.0.3 =
 - code fix
 
 = 0.0.2 =
