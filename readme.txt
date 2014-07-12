@@ -60,6 +60,10 @@ Add this to your functions.php:
 
 == Changelog ==
 
+= 0.0.5 =
+- improved logic for determining when to display message
+- minor code optimizations
+
 = 0.0.4 =
 - permanent fix for Undefined Index issue
 - admin CSS and page updates
@@ -74,6 +78,10 @@ Add this to your functions.php:
 - created
 
 == Upgrade Notice ==
+
+= 0.0.5 =
+- improved logic for determining when to display message
+- minor code optimizations
 
 = 0.0.4 =
 - permanent fix for Undefined Index issue; admin CSS and page updates

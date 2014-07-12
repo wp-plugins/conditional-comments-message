@@ -3,15 +3,15 @@
 Plugin Name: Conditional Comments Message
 Plugin URI: http://www.jimmyscode.com/wordpress/conditional-comments-message/
 Description: Show a message when comments are set to close automatically
-Version: 0.0.4
+Version: 0.0.5
 Author: Jimmy Pe&ntilde;a
 Author URI: http://www.jimmyscode.com/
 License: GPLv2 or later
 */
-
-	define('CCM_PLUGIN_NAME', 'Conditional Comments Message');
+if (!defined('CCM_PLUGIN_NAME')) {
 	// plugin constants
-	define('CCM_VERSION', '0.0.4');
+	define('CCM_PLUGIN_NAME', 'Conditional Comments Message');
+	define('CCM_VERSION', '0.0.5');
 	define('CCM_SLUG', 'conditional-comments-message');
 	define('CCM_LOCAL', 'ccm');
 	define('CCM_OPTION', 'ccm');
@@ -26,7 +26,7 @@ License: GPLv2 or later
 	define('CCM_DEFAULT_ENABLED_NAME', 'enabled');
 	define('CCM_DEFAULT_TEXT_NAME', 'texttoshow');
 	define('CCM_DEFAULT_CLOSED_TEXT_NAME', 'closedtext');
-	
+}
 	// oh no you don't
 	if (!defined('ABSPATH')) {
 		wp_die(__('Do not access this file directly.', ccm_get_local()));
@@ -70,7 +70,7 @@ License: GPLv2 or later
 		}
 		?>
 		<div class="wrap">
-			<h2 id="plugintitle"><img src="<?php echo plugins_url(ccm_get_path() . '/images/comment_message.png'); ?>" title="" alt="" height="64" width="64" align="absmiddle" /> <?php echo CCM_PLUGIN_NAME; _e(' by ', ccm_get_local()); ?><a href="http://www.jimmyscode.com/">Jimmy Pe&ntilde;a</a></h2>
+			<h2 id="plugintitle"><img src="<?php echo ccm_getimagefilename('comment_message.png'); ?>" title="" alt="" height="64" width="64" align="absmiddle" /> <?php echo CCM_PLUGIN_NAME; _e(' by ', ccm_get_local()); ?><a href="http://www.jimmyscode.com/">Jimmy Pe&ntilde;a</a></h2>
 			<div><?php _e('You are running plugin version', ccm_get_local()); ?> <strong><?php echo CCM_VERSION; ?></strong>.</div>
 
 			<?php /* http://code.tutsplus.com/tutorials/the-complete-guide-to-the-wordpress-settings-api-part-5-tabbed-navigation-for-your-settings-page--wp-24971 */ ?>
@@ -86,7 +86,7 @@ License: GPLv2 or later
 			<?php $options = ccm_getpluginoptions(); ?>
 			<?php update_option(ccm_get_option(), $options); ?>
 			<?php if ($active_tab == 'settings') { ?>
-			<h3 id="settings"><img src="<?php echo plugins_url(ccm_get_path() . '/images/settings.png'); ?>" title="" alt="" height="61" width="64" align="absmiddle" /> <?php _e('Plugin Settings', ccm_get_local()); ?></h3>
+			<h3 id="settings"><img src="<?php echo ccm_getimagefilename('settings.png'); ?>" title="" alt="" height="61" width="64" align="absmiddle" /> <?php _e('Plugin Settings', ccm_get_local()); ?></h3>
 				<table class="form-table" id="theme-options-wrap">
 					<tr valign="top"><th scope="row"><strong><label title="<?php _e('Is plugin enabled? Uncheck this to turn it off temporarily.', ccm_get_local()); ?>" for="<?php echo ccm_get_option(); ?>[<?php echo CCM_DEFAULT_ENABLED_NAME; ?>]"><?php _e('Plugin enabled?', ccm_get_local()); ?></label></strong></th>
 						<td><input type="checkbox" id="<?php echo ccm_get_option(); ?>[<?php echo CCM_DEFAULT_ENABLED_NAME; ?>]" name="<?php echo ccm_get_option(); ?>[<?php echo CCM_DEFAULT_ENABLED_NAME; ?>]" value="1" <?php checked('1', ccm_checkifset(CCM_DEFAULT_ENABLED_NAME, CCM_DEFAULT_ENABLED, $options)); ?> /></td>
@@ -105,7 +105,7 @@ License: GPLv2 or later
 					</table>
 				<?php submit_button(); ?>
 			<?php } else { ?>
-			<h3 id="support"><img src="<?php echo plugins_url(ccm_get_path() . '/images/support.png'); ?>" title="" alt="" height="64" width="64" align="absmiddle" /> <?php _e('Support', ccm_get_local()); ?></h3>
+			<h3 id="support"><img src="<?php echo ccm_getimagefilename('support.png'); ?>" title="" alt="" height="64" width="64" align="absmiddle" /> <?php _e('Support', ccm_get_local()); ?></h3>
 				<div class="support">
 				<?php echo ccm_getsupportinfo(ccm_get_slug(), ccm_get_local()); ?>
 				</div>
@@ -115,40 +115,46 @@ License: GPLv2 or later
 		<?php }
 
 	// main function and action
-	add_action('comment_form_after','ccm_commentsclosingmsg'); // comment_form_comments_closed
+	add_action('comment_form_after', 'ccm_commentsclosingmsg'); // comment_form_comments_closed
   function ccm_commentsclosingmsg() {
 		$options = ccm_getpluginoptions();
-		if (!empty($options)) {
-			$enabled = (bool)$options[CCM_DEFAULT_ENABLED_NAME];
-		} else {
-			$enabled = CCM_DEFAULT_ENABLED;
-		}
+		$enabled = (bool)$options[CCM_DEFAULT_ENABLED_NAME];
+		$output = '';
+		
 		if ($enabled) {
-			$output = sanitize_text_field($options[CCM_DEFAULT_TEXT_NAME]); // do we need to sanitize here????
-			$numdays = get_option('close_comments_days_old'); 
-
-			if ($numdays !== 0) { // comments are set to close in X days
-				if (comments_open()) {
-					// replace template tags
-					$output = str_replace('%NUMDAYS%', $numdays, $output);
-				} else { // they are closed
-					$output = sanitize_text_field($options[CCM_DEFAULT_CLOSED_TEXT_NAME]);
+			if (get_option('close_comments_for_old_posts')) { // the checkbox!!!!
+				$numdays = (int)get_option('close_comments_days_old'); 
+				if ($numdays !== 0) { // comments are set to close in >0 days
+					if (comments_open()) {
+						// replace template tags
+						$output = sanitize_text_field($options[CCM_DEFAULT_TEXT_NAME]); // do we need to sanitize here????
+						$output = str_replace('%NUMDAYS%', $numdays, $output);
+					} else { // they are closed
+						$output = sanitize_text_field($options[CCM_DEFAULT_CLOSED_TEXT_NAME]);
+					}
 				}
 			}
-			ccm_show_output($output);
+			if ($output !== '') {
+				ccm_show_output($output);
+			}
 		}
 	}
 	add_action('comment_form_comments_closed', 'ccm_show_closed');
 	function ccm_show_closed() {
 		$options = ccm_getpluginoptions();
-		if (!empty($options)) {
-			$enabled = (bool)$options[CCM_DEFAULT_ENABLED_NAME];
-		} else {
-			$enabled = CCM_DEFAULT_ENABLED;
-		}
+		$enabled = (bool)$options[CCM_DEFAULT_ENABLED_NAME];
+		$output = '';
+		
 		if ($enabled) {
-			$output = sanitize_text_field($options[CCM_DEFAULT_CLOSED_TEXT_NAME]);
-			ccm_show_output($output);
+			if (get_option('close_comments_for_old_posts')) { // the checkbox!!!!
+				$numdays = (int)get_option('close_comments_days_old'); 
+				if ($numdays !== 0) { // comments are set to close in >0 days
+					$output = sanitize_text_field($options[CCM_DEFAULT_CLOSED_TEXT_NAME]);
+					if ($output !== '') {
+						ccm_show_output($output);
+					}
+				}
+			}
 		}
 	}
 	
@@ -277,12 +283,15 @@ License: GPLv2 or later
 		return $output;		
 	}
 	function ccm_checkifset($optionname, $optiondefault, $optionsarr) {
-		return (!empty($optionsarr[$optionname]) ? $optionsarr[$optionname] : $optiondefault);
+		return (isset($optionsarr[$optionname]) ? $optionsarr[$optionname] : $optiondefault);
 	}
 	function ccm_getlinebreak() {
 	  echo '<tr valign="top"><td colspan="2"></td></tr>';
 	}
 	function ccm_explanationrow($msg = '') {
 		echo '<tr valign="top"><td></td><td><em>' . $msg . '</em></td></tr>';
+	}
+	function ccm_getimagefilename($fname = '') {
+		return plugins_url(ccm_get_path() . '/images/' . $fname);
 	}
 ?>
