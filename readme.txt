@@ -19,10 +19,10 @@ Use it for:
 <ul>
 <li>Displaying how long comments are open</li>
 <li>Show a different message depending on whether comments are open or closed</li>
+<li>Dynamically count down the number of days remaining in the comment period</li>
 </ul>
 
 You can also add additional text that will display only when comments are open.
-
 
 == Installation ==
 
@@ -54,11 +54,18 @@ Add this to your functions.php:
 
 `remove_action('admin_head', 'insert_ccm_admin_css');`
 
+= What does the 'dynamic remaining days' checkbox do? =
+
+Instead of just showing how many days the comment period is open, this will instead dynamically count down the number of days remaining. So if you set your comment window to 30 days, then it will initially say "4 weeks". As time passes, the message dynamically adjusts itself from "weeks" to "days". The post date is used to determine the number of days remaining and the countdown.
+
 == Screenshots ==
 
 1. Plugin settings page
 
 == Changelog ==
+
+= 0.0.6 =
+- added option to make number of days dynamic; i.e. if setting is 30 days, then it will dynamically count down until the close date
 
 = 0.0.5 =
 - improved logic for determining when to display message
@@ -78,6 +85,9 @@ Add this to your functions.php:
 - created
 
 == Upgrade Notice ==
+
+= 0.0.6 =
+- added option to make number of days dynamic; i.e. if setting is 30 days, then it will dynamically count down until the close date
 
 = 0.0.5 =
 - improved logic for determining when to display message

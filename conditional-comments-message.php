@@ -3,7 +3,7 @@
 Plugin Name: Conditional Comments Message
 Plugin URI: http://www.jimmyscode.com/wordpress/conditional-comments-message/
 Description: Show a message when comments are set to close automatically
-Version: 0.0.5
+Version: 0.0.6
 Author: Jimmy Pe&ntilde;a
 Author URI: http://www.jimmyscode.com/
 License: GPLv2 or later
@@ -11,7 +11,7 @@ License: GPLv2 or later
 if (!defined('CCM_PLUGIN_NAME')) {
 	// plugin constants
 	define('CCM_PLUGIN_NAME', 'Conditional Comments Message');
-	define('CCM_VERSION', '0.0.5');
+	define('CCM_VERSION', '0.0.6');
 	define('CCM_SLUG', 'conditional-comments-message');
 	define('CCM_LOCAL', 'ccm');
 	define('CCM_OPTION', 'ccm');
@@ -22,10 +22,12 @@ if (!defined('CCM_PLUGIN_NAME')) {
 	define('CCM_DEFAULT_ENABLED', true);
 	define('CCM_DEFAULT_TEXT', 'The comment form will be available for %NUMDAYS% days from the date the article was published.');
 	define('CCM_DEFAULT_CLOSED_TEXT', 'This article is closed to any future comments.');
+	define('CCM_DEFAULT_DYNAMIC_CLOSE_TIME', false);
 	/* option array member names */
 	define('CCM_DEFAULT_ENABLED_NAME', 'enabled');
 	define('CCM_DEFAULT_TEXT_NAME', 'texttoshow');
 	define('CCM_DEFAULT_CLOSED_TEXT_NAME', 'closedtext');
+	define('CCM_DEFAULT_DYNAMIC_CLOSE_TIME_NAME', 'dynamictime');
 }
 	// oh no you don't
 	if (!defined('ABSPATH')) {
@@ -52,6 +54,7 @@ if (!defined('CCM_PLUGIN_NAME')) {
 			$input[CCM_DEFAULT_ENABLED_NAME] = (bool)$input[CCM_DEFAULT_ENABLED_NAME];
 			$input[CCM_DEFAULT_TEXT_NAME] = wp_kses_post(force_balance_tags($input[CCM_DEFAULT_TEXT_NAME]));
 			$input[CCM_DEFAULT_CLOSED_TEXT_NAME] = wp_kses_post(force_balance_tags($input[CCM_DEFAULT_CLOSED_TEXT_NAME]));
+			$input[CCM_DEFAULT_DYNAMIC_CLOSE_TIME_NAME] = (bool)$input[CCM_DEFAULT_DYNAMIC_CLOSE_TIME_NAME];
 		}
 		return $input;
 	} 
@@ -98,6 +101,11 @@ if (!defined('CCM_PLUGIN_NAME')) {
 					</tr>
 					<?php ccm_explanationrow(__('Enter the message you want users to see while the comment period is open. Go to <a href="' . admin_url() . 'options-discussion.php">Discussion</a> settings to configure auto-closing comment periods.<br />Template tag <strong>%NUMDAYS%</strong> is for the # of days before comments automatically close.', ccm_get_local())); ?>
 					<?php ccm_getlinebreak(); ?>
+					<tr valign="top"><th scope="row"><strong><label title="<?php _e('Show dynamic message instead', ccm_get_local()); ?>" for="<?php echo ccm_get_option(); ?>[<?php echo CCM_DEFAULT_DYNAMIC_CLOSE_TIME_NAME; ?>]"><?php _e('Show dynamic message instead', ccm_get_local()); ?></label></strong></th>
+						<td><input type="checkbox" id="<?php echo ccm_get_option(); ?>[<?php echo CCM_DEFAULT_DYNAMIC_CLOSE_TIME_NAME; ?>]" name="<?php echo ccm_get_option(); ?>[<?php echo CCM_DEFAULT_DYNAMIC_CLOSE_TIME_NAME; ?>]" value="1" <?php checked('1', ccm_checkifset(CCM_DEFAULT_DYNAMIC_CLOSE_TIME_NAME, CCM_DEFAULT_DYNAMIC_CLOSE_TIME, $options)); ?> /></td>
+					</tr>
+					<?php ccm_explanationrow(__('Instead of the above message, show a message which dynamically changes the remaining days. Ex: 30 days, then 29 days, 28, 27, etc', ccm_get_local())); ?>
+					<?php ccm_getlinebreak(); ?>
 					<tr valign="top"><th scope="row"><strong><label title="<?php _e('Enter closed comments message', ccm_get_local()); ?>" for="<?php echo ccm_get_option(); ?>[<?php echo CCM_DEFAULT_CLOSED_TEXT_NAME; ?>]"><?php _e('Enter closed comments message', ccm_get_local()); ?></label></strong></th>
 						<td><textarea rows="12" cols="75" id="<?php echo ccm_get_option(); ?>[<?php echo CCM_DEFAULT_CLOSED_TEXT_NAME; ?>]" name="<?php echo ccm_get_option(); ?>[<?php echo CCM_DEFAULT_CLOSED_TEXT_NAME; ?>]"><?php echo ccm_checkifset(CCM_DEFAULT_CLOSED_TEXT_NAME, CCM_DEFAULT_CLOSED_TEXT, $options); ?></textarea></td>
 					</tr>
@@ -126,9 +134,17 @@ if (!defined('CCM_PLUGIN_NAME')) {
 				$numdays = (int)get_option('close_comments_days_old'); 
 				if ($numdays !== 0) { // comments are set to close in >0 days
 					if (comments_open()) {
-						// replace template tags
-						$output = sanitize_text_field($options[CCM_DEFAULT_TEXT_NAME]); // do we need to sanitize here????
-						$output = str_replace('%NUMDAYS%', $numdays, $output);
+						$dynamictime = (bool)$options[CCM_DEFAULT_DYNAMIC_CLOSE_TIME_NAME];
+						if (!$dynamictime) {
+							// replace template tags
+							$output = sanitize_text_field($options[CCM_DEFAULT_TEXT_NAME]); // do we need to sanitize here????
+							$output = str_replace('%NUMDAYS%', $numdays, $output);
+						} else { // show dynamically changing # of days
+							// http://wpengineer.com/2692/inform-user-about-automatic-comment-closing-time/
+							global $post;
+							$expires = strtotime( "{$post->post_date_gmt} GMT" ) +  $numdays * DAY_IN_SECONDS;
+							$output = printf(__( '(This topic will automatically close in %s. )', ccm_get_local()),  human_time_diff($expires));
+						}
 					} else { // they are closed
 						$output = sanitize_text_field($options[CCM_DEFAULT_CLOSED_TEXT_NAME]);
 					}
@@ -248,7 +264,8 @@ if (!defined('CCM_PLUGIN_NAME')) {
 			array(
 				CCM_DEFAULT_ENABLED_NAME => CCM_DEFAULT_ENABLED, 
 				CCM_DEFAULT_TEXT_NAME => CCM_DEFAULT_TEXT,
-				CCM_DEFAULT_CLOSED_TEXT_NAME => CCM_DEFAULT_CLOSED_TEXT
+				CCM_DEFAULT_CLOSED_TEXT_NAME => CCM_DEFAULT_CLOSED_TEXT,
+				CCM_DEFAULT_DYNAMIC_CLOSE_TIME_NAME => CCM_DEFAULT_DYNAMIC_CLOSE_TIME
 			));
 	}
 	
