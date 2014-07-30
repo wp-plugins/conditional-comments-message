@@ -3,7 +3,7 @@
 Plugin Name: Conditional Comments Message
 Plugin URI: http://www.jimmyscode.com/wordpress/conditional-comments-message/
 Description: Show a message when comments are set to close automatically
-Version: 0.0.6
+Version: 0.0.7
 Author: Jimmy Pe&ntilde;a
 Author URI: http://www.jimmyscode.com/
 License: GPLv2 or later
@@ -11,7 +11,7 @@ License: GPLv2 or later
 if (!defined('CCM_PLUGIN_NAME')) {
 	// plugin constants
 	define('CCM_PLUGIN_NAME', 'Conditional Comments Message');
-	define('CCM_VERSION', '0.0.6');
+	define('CCM_VERSION', '0.0.7');
 	define('CCM_SLUG', 'conditional-comments-message');
 	define('CCM_LOCAL', 'ccm');
 	define('CCM_OPTION', 'ccm');
@@ -77,7 +77,7 @@ if (!defined('CCM_PLUGIN_NAME')) {
 			<div><?php _e('You are running plugin version', ccm_get_local()); ?> <strong><?php echo CCM_VERSION; ?></strong>.</div>
 
 			<?php /* http://code.tutsplus.com/tutorials/the-complete-guide-to-the-wordpress-settings-api-part-5-tabbed-navigation-for-your-settings-page--wp-24971 */ ?>
-			<?php $active_tab = (!empty($_GET['tab']) ? $_GET['tab'] : 'settings'); ?>
+			<?php $active_tab = (isset($_GET['tab']) ? $_GET['tab'] : 'settings'); ?>
 
 			<h2 class="nav-tab-wrapper">
 			  <a href="?page=<?php echo ccm_get_slug(); ?>&tab=settings" class="nav-tab <?php echo $active_tab == 'settings' ? 'nav-tab-active' : ''; ?>"><?php _e('Settings', ccm_get_local()); ?></a>
@@ -185,7 +185,7 @@ if (!defined('CCM_PLUGIN_NAME')) {
 		global $pagenow;
 		if (current_user_can(CCM_PERMISSIONS_LEVEL)) { // user has privilege
 			if ($pagenow == 'options-general.php') { // we are on Settings menu
-				if (!empty($_GET['page'])) {
+				if (isset($_GET['page'])) {
 					if ($_GET['page'] == ccm_get_slug()) { // we are on this plugin's settings page
 						$options = ccm_getpluginoptions();
 						if (!empty($options)) {
@@ -205,7 +205,7 @@ if (!defined('CCM_PLUGIN_NAME')) {
 		global $pagenow;
 		if (current_user_can(CCM_PERMISSIONS_LEVEL)) { // user has privilege
 			if ($pagenow == 'options-general.php') { // we are on Settings menu
-				if (!empty($_GET['page'])) {
+				if (isset($_GET['page'])) {
 					if ($_GET['page'] == ccm_get_slug()) { // we are on this plugin's settings page
 						ccm_admin_styles();
 					}

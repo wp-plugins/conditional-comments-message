@@ -64,6 +64,9 @@ Instead of just showing how many days the comment period is open, this will inst
 
 == Changelog ==
 
+= 0.0.7 =
+- fixed validation issue
+
 = 0.0.6 =
 - added option to make number of days dynamic; i.e. if setting is 30 days, then it will dynamically count down until the close date
 
@@ -85,6 +88,9 @@ Instead of just showing how many days the comment period is open, this will inst
 - created
 
 == Upgrade Notice ==
+
+= 0.0.7 =
+- fixed validation issue
 
 = 0.0.6 =
 - added option to make number of days dynamic; i.e. if setting is 30 days, then it will dynamically count down until the close date
