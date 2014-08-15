@@ -3,7 +3,7 @@
 Plugin Name: Conditional Comments Message
 Plugin URI: http://www.jimmyscode.com/wordpress/conditional-comments-message/
 Description: Show a message when comments are set to close automatically
-Version: 0.0.7
+Version: 0.0.8
 Author: Jimmy Pe&ntilde;a
 Author URI: http://www.jimmyscode.com/
 License: GPLv2 or later
@@ -11,7 +11,7 @@ License: GPLv2 or later
 if (!defined('CCM_PLUGIN_NAME')) {
 	// plugin constants
 	define('CCM_PLUGIN_NAME', 'Conditional Comments Message');
-	define('CCM_VERSION', '0.0.7');
+	define('CCM_VERSION', '0.0.8');
 	define('CCM_SLUG', 'conditional-comments-message');
 	define('CCM_LOCAL', 'ccm');
 	define('CCM_OPTION', 'ccm');

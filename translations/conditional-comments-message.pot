@@ -1,0 +1,162 @@
+# Copyright (C) 2014 Conditional Comments Message
+# This file is distributed under the same license as the Conditional Comments Message package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Conditional Comments Message 0.0.7\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/conditional-comments-message\n"
+"POT-Creation-Date: 2014-08-14 16:35:50+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2014-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#: conditional-comments-message.php:34
+msgid "Do not access this file directly."
+msgstr ""
+
+#: conditional-comments-message.php:72
+msgid "You do not have sufficient permission to access this page"
+msgstr ""
+
+#: conditional-comments-message.php:76
+msgid " by "
+msgstr ""
+
+#: conditional-comments-message.php:77
+msgid "You are running plugin version"
+msgstr ""
+
+#: conditional-comments-message.php:83
+msgid "Settings"
+msgstr ""
+
+#: conditional-comments-message.php:84 conditional-comments-message.php:116
+msgid "Support"
+msgstr ""
+
+#: conditional-comments-message.php:92
+msgid "Plugin Settings"
+msgstr ""
+
+#: conditional-comments-message.php:94 conditional-comments-message.php:97
+msgid "Is plugin enabled? Uncheck this to turn it off temporarily."
+msgstr ""
+
+#: conditional-comments-message.php:94
+msgid "Plugin enabled?"
+msgstr ""
+
+#: conditional-comments-message.php:99
+msgid "Enter open comments message"
+msgstr ""
+
+#: conditional-comments-message.php:104
+msgid "Show dynamic message instead"
+msgstr ""
+
+#: conditional-comments-message.php:107
+msgid ""
+"Instead of the above message, show a message which dynamically changes the "
+"remaining days. Ex: 30 days, then 29 days, 28, 27, etc"
+msgstr ""
+
+#: conditional-comments-message.php:109
+msgid "Enter closed comments message"
+msgstr ""
+
+#: conditional-comments-message.php:112
+msgid ""
+"Enter the message you want users to see when the comments period is closed."
+msgstr ""
+
+#: conditional-comments-message.php:146
+msgid "(This topic will automatically close in %s. )"
+msgstr ""
+
+#: conditional-comments-message.php:194
+msgid "is currently disabled."
+msgstr ""
+
+#: conditional-comments-message.php:229
+msgid "<a href=\"http://wordpress.org/support/plugin/%s\">Support</a>"
+msgstr ""
+
+#: conditional-comments-message.php:230 conditional-comments-message.php:286
+msgid "<a href=\"http://wordpress.org/extend/plugins/%s/\">Documentation</a>"
+msgstr ""
+
+#: conditional-comments-message.php:231
+msgid "<a href=\"http://wordpress.org/plugins/%s/faq/\">FAQ</a>"
+msgstr ""
+
+#: conditional-comments-message.php:279
+msgid "<a href=\"options-general.php?page=%s\">Settings</a>"
+msgstr ""
+
+#: conditional-comments-message.php:284
+msgid "Do you need help with this plugin? Check out the following resources:"
+msgstr ""
+
+#: conditional-comments-message.php:287
+msgid "<a href=\"http://wordpress.org/plugins/%s/faq/\">FAQ</a><br />"
+msgstr ""
+
+#: conditional-comments-message.php:288
+msgid ""
+"<a href=\"http://wordpress.org/support/plugin/%s\">Support Forum</a><br />"
+msgstr ""
+
+#: conditional-comments-message.php:289
+msgid ""
+"<a href=\"http://www.jimmyscode.com/wordpress/%s\">Plugin Homepage / Demo</"
+"a><br />"
+msgstr ""
+
+#: conditional-comments-message.php:290
+msgid ""
+"<a href=\"http://wordpress.org/extend/plugins/%s/developers/\">Development</"
+"a><br />"
+msgstr ""
+
+#: conditional-comments-message.php:291
+msgid ""
+"<a href=\"http://wordpress.org/plugins/%s/changelog/\">Changelog</a><br />"
+msgstr ""
+
+#: conditional-comments-message.php:294
+msgid ""
+"If you like this plugin, please <a href=\"http://wordpress.org/support/view/"
+"plugin-reviews/%s/\">rate it on WordPress.org</a>"
+msgstr ""
+
+#: conditional-comments-message.php:295
+msgid ""
+" and click the <a href=\"http://wordpress.org/plugins/%s/#compatibility"
+"\">Works</a> button. "
+msgstr ""
+
+#: conditional-comments-message.php:297
+msgid "Your donations encourage further development and support. "
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Conditional Comments Message"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "http://www.jimmyscode.com/wordpress/conditional-comments-message/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Show a message when comments are set to close automatically"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Jimmy Pe&ntilde;a"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://www.jimmyscode.com/"
+msgstr ""
